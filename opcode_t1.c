@@ -5,11 +5,12 @@
 * @stack: pointer to the top of the stack
 * @line_number: line number in the Monty bytecode file
 */
-void swap(stack_t **stack, unsigned int line_number)
+void swap(stack_t **stack, int value, unsigned int line_number)
 {
 	int temp;
 	stack_t *first, *second;
 
+	(void)value;
 	if (*stack == NULL || (*stack)->next == NULL)
 	{
 		fprintf(stderr, "L%u: can't swap, stack too short\n", line_number);
@@ -24,15 +25,15 @@ void swap(stack_t **stack, unsigned int line_number)
 	second->n = temp;
 }
 
-#include "monty.h"
 
 /**
 * nop - doesn't do anything
 * @stack: pointer to the top of the stack
 * @line_number: line number in the Monty bytecode file
 */
-void nop(stack_t **stack, unsigned int line_number)
+void nop(stack_t **stack, int value, unsigned int line_number)
 {
+	(void)value;
 	(void)stack;
 	(void)line_number;
 }
@@ -42,7 +43,7 @@ void nop(stack_t **stack, unsigned int line_number)
 * @stack: pointer to the top of the stack
 * @line_number: line number in the Monty bytecode file
 */
-void add(stack_t **stack, unsigned int line_number)
+void add(stack_t **stack, int value, unsigned int line_number)
 {
 	if (*stack == NULL || (*stack)->next == NULL)
 	{
@@ -51,5 +52,5 @@ void add(stack_t **stack, unsigned int line_number)
 	}
 
 	(*stack)->next->n += (*stack)->n;
-	pop(stack, line_number);
+	pop(stack, value, line_number);
 }

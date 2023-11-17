@@ -21,32 +21,41 @@ instruction_t instructions[] = {
  */
 
 void p_line(FILE *file, stack_t **stack, unsigned int *line_number,
-            instruction_t *instructions) {
+            instruction_t *instructions)
+{
     char *line = NULL;
     size_t len = 0;
     char *opcode;
-    int i, found;
+    int value, i;
 
-    while (getline(&line, &len, file) != -1) {
+    while (getline(&line, &len, file) != -1)
+    {
         (*line_number)++;
-        found = 0;
 
         opcode = strtok(line, " \t\n");
-        /** argument = strtok(NULL, " \t\n");*/
 
-        for (i = 0; instructions[i].opcode != NULL; i++) {
-            if (strcmp(opcode, instructions[i].opcode) == 0) {
-                instructions[i].f(stack, *line_number);
-                found = 1;
-                break;
+        while (opcode != NULL)
+        {
+            if (sscanf(opcode, "%d", &value) == 1)
+            {
+                for (i = 0; instructions[i].opcode != NULL; i++)
+                {
+                    if (strcmp(opcode, instructions[i].opcode) == 0)
+                    {
+                        instructions[i].f(stack, value, *line_number);
+                        break;
+                    }
+                }
             }
-        }
+            else
+            {
+                fprintf(stderr, "L%u: invalid argument %s\n", *line_number, opcode);
+                free_stack(stack);
+                free(line);
+                exit(EXIT_FAILURE);
+            }
 
-        if (!found) {
-            fprintf(stderr, "L%u: unknown instruction %s\n", *line_number, opcode);
-            free_stack(stack);
-            free(line); 
-            exit(EXIT_FAILURE);
+            opcode = strtok(NULL, " \t\n");
         }
     }
 

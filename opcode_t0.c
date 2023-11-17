@@ -5,9 +5,9 @@
 * @stack: pointer to the top of the stack
 * @line_number: line number in the Monty bytecode file
 */
-void push(stack_t **stack, unsigned int line_number)
+void push(stack_t **stack, int value, unsigned int line_number)
 {
-	int n = 0;
+	int n = value;
 	stack_t *new_node;
 
 	if (stack == NULL)
@@ -35,10 +35,11 @@ void push(stack_t **stack, unsigned int line_number)
 * @stack: pointer to the top of the stack
 * @line_number: line number in the Monty bytecode file
 */
-void pall(stack_t **stack, unsigned int line_number)
+void pall(stack_t **stack, int value, unsigned int line_number)
 {
 	stack_t *temp = *stack;
 
+	(void)value;
 	(void)line_number;
 
 	while (temp != NULL)
@@ -69,8 +70,9 @@ void free_stack(stack_t **stack)
  * @stack: pointer to the top of the stack
  * @line_number: line number in the Monty bytecode file
  */
-void pint(stack_t **stack, unsigned int line_number)
+void pint(stack_t **stack, int value, unsigned int line_number)
 {
+	(void)value;
 	if (*stack == NULL)
 	{
 		fprintf(stderr, "L%u: can't pint, stack empty\n", line_number);
@@ -84,9 +86,11 @@ void pint(stack_t **stack, unsigned int line_number)
  * @stack: pointer to the top of the stack
  * @line_number: line number in the Monty bytecode file
  */
-void pop(stack_t **stack, unsigned int line_number)
+void pop(stack_t **stack, int value, unsigned int line_number)
 {
 	stack_t *temp;
+	
+	(void)value;
 
 	if (*stack == NULL)
 	{
