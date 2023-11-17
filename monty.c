@@ -21,38 +21,36 @@ instruction_t instructions[] = {
  */
 
 void p_line(FILE *file, stack_t **stack, unsigned int *line_number,
-instruction_t *instructions)
-{
-char *read;
-char *line = NULL;
-size_t len = 0;
-char *opcode;
-int i, found = 0;
+            instruction_t *instructions) {
+    char *line = NULL;
+    size_t len = 0;
+    char *opcode;
+    int i, found;
 
-while ((read = fgets(line, len, file)) != NULL)
-{
-(*line_number)++;
+    while (getline(&line, &len, file) != -1) {
+        (*line_number)++;
+        found = 0;
 
-opcode = strtok(line, " \t\n");
-/** argument = strtok(NULL, " \t\n");*/
+        opcode = strtok(line, " \t\n");
+        /** argument = strtok(NULL, " \t\n");*/
 
-for (i = 0; instructions[i].opcode != NULL; i++)
-{
-if (strcmp(opcode, instructions[i].opcode) == 0)
-{
-instructions[i].f(stack, *line_number);
-found = 1;
-break;
-}
-}
-if (!found)
-{
-fprintf(stderr, "L%u: unknown instruction %s\n", *line_number, opcode);
-free_stack(stack);
-exit(EXIT_FAILURE);
-}
-}
-free(line);
+        for (i = 0; instructions[i].opcode != NULL; i++) {
+            if (strcmp(opcode, instructions[i].opcode) == 0) {
+                instructions[i].f(stack, *line_number);
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            fprintf(stderr, "L%u: unknown instruction %s\n", *line_number, opcode);
+            free_stack(stack);
+            free(line); 
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    free(line);
 }
 
 /**
